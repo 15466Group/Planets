@@ -18,14 +18,24 @@ public class PlanetRotations : MonoBehaviour {
 	private float curRadians;
 	private int localID;
 	private bool expanding;
-
+	private float expansionRate;
+	
 	public bool initialLarge;
+	private float numOscillations;
+	public GameObject cam;
+	private float clipLen;
+	private float frameRate;
 
 
 	// Use this for initialization
 	void Start () {
+		frameRate = 60.0f;
 		rot = Quaternion.identity;
 		smooth = 200.0f;
+		numOscillations = 0.5f;
+		clipLen = cam.GetComponent<AudioSource> ().clip.length;
+		expansionRate = (3.0f / 2.0f * Mathf.PI) / (clipLen * frameRate);
+//		Debug.Log (expansionRate);
 
 		if (!initialLarge) {
 			curLocalScale = minLocalScale;
@@ -50,7 +60,10 @@ public class PlanetRotations : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.RotateAround(transform.position, transform.forward, -2.0f);
+		frameRate = 1.0f / Time.deltaTime;
+//		Debug.Log (frameRate);
+		expansionRate = (3.0f / 2.0f * Mathf.PI) / (clipLen * frameRate);
+//		transform.RotateAround(transform.position, transform.forward, 360.0f/(clipLen * frameRate));
 
 		if (curLocalScale >= maxLocalScale) {
 			expanding = false;
@@ -60,12 +73,13 @@ public class PlanetRotations : MonoBehaviour {
 		}
 
 		if (expanding) {
-			curLocalScale += 0.02f;
+			curLocalScale += expansionRate;
 		} else {
-			curLocalScale -= 0.02f;
+			curLocalScale -= expansionRate;
 		}
 
-		curRadians = curRadians + 0.02f;
+		curRadians = curRadians;// + expansionRate;
+//		curRadians = 0.0f;
 
 		transform.localScale = new Vector3 (curLocalScale, curLocalScale, curLocalScale);
 

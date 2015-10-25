@@ -16,6 +16,7 @@ public class CameraPanning : MonoBehaviour {
 		velocity = Vector3.zero;
 		velocity.x = (Vector3.Distance(endPos, transform.position))/runTime;
 		totalTime = 0.0f;
+//		Application.targetFrameRate = 30;
 	}
 	
 	// Update is called once per frame
@@ -24,6 +25,8 @@ public class CameraPanning : MonoBehaviour {
 		if (totalTime < runTime) {
 			transform.position += velocity * Time.deltaTime;
 //			Debug.Log (totalTime);
+		} else {
+			Debug.Break();
 		}
 	}
 }
